@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">LocoVideoTask</string>
+    <string name="error_video_player">Video Player fails to initialize with error :</string>
+</resources>
