@@ -24,8 +24,20 @@
 
     </RelativeLayout>
 
-    <TextureView
-        android:id="@+id/tv_main_video_content"
+    <!--<TextureView-->
+        <!--android:id="@+id/tv_main_video_content"-->
+        <!--android:layout_width="100dp"-->
+        <!--android:layout_height="100dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/rv_question_card"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/rv_question_card"-->
+        <!--/>-->
+
+    <com.task.locovideotask.ui.videoutils.RoundedCornerLayout
+        android:id="@+id/ff_main_video_content"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
@@ -34,70 +46,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rv_question_card"
-        />
-
-    <LinearLayout
-        android:id="@+id/custom_view"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@drawable/rounded_view"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        app:layout_constraintBottom_toTopOf="@+id/rv_question_card"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rv_question_card"
-        />
-
+        >
+        <TextureView
+            android:id="@+id/tv_main_video_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            />
+    </com.task.locovideotask.ui.videoutils.RoundedCornerLayout>
 
 
 </android.support.constraint.ConstraintLayout>
-
-    <!--
-    <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.task.locovideotask.ui.mainvideo.MainVideoActivity">
-
-
-
-
-
-
-       <View
-           android:layout_width="match_parent"
-           android:layout_centerInParent="true"
-           android:layout_marginLeft="40dp"
-           android:layout_marginRight="40dp"
-           android:layout_height="400dp"
-           android:background="@android:color/black"></View>
-
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:layout_marginTop="85dp">
-
-
-            <TextureView
-                android:id="@+id/tv_main_video_content"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-
-                android:visibility="visible" />
-        </RelativeLayout>
-
-
-
-
-
-
-    </RelativeLayout>
-    -->

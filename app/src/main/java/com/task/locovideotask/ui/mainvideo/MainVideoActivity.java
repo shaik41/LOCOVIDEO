@@ -4,6 +4,7 @@ import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.view.TextureView;
 import android.view.View;
 
 import com.task.locovideotask.R;
+import com.task.locovideotask.ui.videoutils.RoundedCornerLayout;
 
 
 import java.io.IOException;
@@ -32,12 +34,16 @@ public class MainVideoActivity extends AppCompatActivity implements  MediaPlayer
     @BindView(R.id.cv_view_parent)
     ConstraintLayout viewParent;
 
+    @BindView(R.id.ff_main_video_content)
+    RoundedCornerLayout roundedView;
+
     private MediaPlayer videoPlayer;
 
     private boolean isFullScreen=false;
 
     private String VIDEO_URL = "http://www.exit109.com/~dnn/clips/RW20seconds_2.mp4";
     private String LOG_TAG = "MAIN_VIDEO_SCREEN";
+
     private DisplayMetrics displayMetrics;
 
     @Override
@@ -85,6 +91,10 @@ public class MainVideoActivity extends AppCompatActivity implements  MediaPlayer
     }
 
     private void toggleVideo() {
+        if(videoPlayer==null){
+            return;
+        }
+
         if(isFullScreen){
             isFullScreen=false;
             setCircleConstraint();
@@ -96,7 +106,7 @@ public class MainVideoActivity extends AppCompatActivity implements  MediaPlayer
         videoView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                toggleVideo();
+                    toggleVideo();
             }
         },5000);
 
@@ -109,6 +119,10 @@ public class MainVideoActivity extends AppCompatActivity implements  MediaPlayer
             videoPlayer.release();
             videoPlayer=null;
         }
+        if(videoView!=null){
+            videoView.requestLayout();
+        }
+
     }
 
     @Override
@@ -148,38 +162,42 @@ public class MainVideoActivity extends AppCompatActivity implements  MediaPlayer
     }
 
     private void setCircleConstraint(){
-        findViewById(R.id.custom_view).setVisibility(View.VISIBLE);
+        roundedView.setToCircle(true);
+        //findViewById(R.id.custom_view).setVisibility(View.VISIBLE);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(viewParent);
         ViewData viewData=adjustAspectRatio(150,150);
-        constraintSet.constrainHeight(R.id.tv_main_video_content,getDPI(viewData.getHeight()));
-        constraintSet.constrainWidth(R.id.tv_main_video_content,getDPI(viewData.getWidth()));
-        constraintSet.connect(R.id.tv_main_video_content,ConstraintSet.END,R.id.cv_view_parent,ConstraintSet.END,0);
-        constraintSet.connect(R.id.tv_main_video_content,ConstraintSet.START,R.id.cv_view_parent,ConstraintSet.START,0);
-        constraintSet.connect(R.id.tv_main_video_content,ConstraintSet.BOTTOM,R.id.rv_question_card,ConstraintSet.TOP,0);
-        constraintSet.connect(R.id.tv_main_video_content,ConstraintSet.TOP,R.id.rv_question_card,ConstraintSet.TOP,0);
-        TransitionManager.beginDelayedTransition(viewParent);
+        constraintSet.constrainHeight(R.id.ff_main_video_content,getDPI(viewData.getHeight()));
+        constraintSet.constrainWidth(R.id.ff_main_video_content,getDPI(viewData.getWidth()));
+        constraintSet.connect(R.id.ff_main_video_content,ConstraintSet.END,R.id.cv_view_parent,ConstraintSet.END,0);
+        constraintSet.connect(R.id.ff_main_video_content,ConstraintSet.START,R.id.cv_view_parent,ConstraintSet.START,0);
+        constraintSet.connect(R.id.ff_main_video_content,ConstraintSet.BOTTOM,R.id.rv_question_card,ConstraintSet.TOP,0);
+        constraintSet.connect(R.id.ff_main_video_content,ConstraintSet.TOP,R.id.rv_question_card,ConstraintSet.TOP,0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            TransitionManager.beginDelayedTransition(viewParent);
+        }
         constraintSet.applyTo(viewParent);
 
-        //adjustAspectRatio(100,100);
-        //return constraintSet;
+
 
     }
 
     private void setFullScreenConstraint(){
-        findViewById(R.id.custom_view).setVisibility(View.GONE);
+        roundedView.setToCircle(false);
+        //findViewById(R.id.custom_view).setVisibility(View.GONE);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(viewParent);
-        constraintSet.constrainHeight(R.id.tv_main_video_content,0);
-        constraintSet.constrainWidth(R.id.tv_main_video_content,0);
-        constraintSet.connect(R.id.tv_main_video_content,ConstraintSet.END,R.id.cv_view_parent,ConstraintSet.END,0);
-        constraintSet.connect(R.id.tv_main_video_content,ConstraintSet.START,R.id.cv_view_parent,ConstraintSet.START,0);
-        constraintSet.connect(R.id.tv_main_video_content,ConstraintSet.BOTTOM,R.id.cv_view_parent,ConstraintSet.BOTTOM,0);
-        constraintSet.connect(R.id.tv_main_video_content,ConstraintSet.TOP,R.id.cv_view_parent,ConstraintSet.TOP,0);
-        TransitionManager.beginDelayedTransition(viewParent);
+        constraintSet.constrainHeight(R.id.ff_main_video_content,0);
+        constraintSet.constrainWidth(R.id.ff_main_video_content,0);
+        constraintSet.connect(R.id.ff_main_video_content,ConstraintSet.END,R.id.cv_view_parent,ConstraintSet.END,0);
+        constraintSet.connect(R.id.ff_main_video_content,ConstraintSet.START,R.id.cv_view_parent,ConstraintSet.START,0);
+        constraintSet.connect(R.id.ff_main_video_content,ConstraintSet.BOTTOM,R.id.cv_view_parent,ConstraintSet.BOTTOM,0);
+        constraintSet.connect(R.id.ff_main_video_content,ConstraintSet.TOP,R.id.cv_view_parent,ConstraintSet.TOP,0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            TransitionManager.beginDelayedTransition(viewParent);
+        }
         constraintSet.applyTo(viewParent);
-        //adjustAspectRatio(720,1280);
-        //return constraintSet;
+
 
 
 
