@@ -1,28 +1,35 @@
 package com.task.locovideotask.ui.mainvideo;
 
+import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.TextureView;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.task.locovideotask.R;
 
 
 import java.io.IOException;
 
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainVideoActivity extends AppCompatActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener {
+public class MainVideoActivity extends AppCompatActivity implements  MediaPlayer.OnPreparedListener, TextureView.SurfaceTextureListener {
 
-    @BindView(R.id.sv_main_video_content)
-    SurfaceView videoView;
+    @BindView(R.id.tv_main_video_content)
+    TextureView videoView;
 
     private SurfaceHolder videoViewHolder;
     private MediaPlayer videoPlayer;
+
 
     private String VIDEO_URL = "http://www.exit109.com/~dnn/clips/RW20seconds_2.mp4";
     private String LOG_TAG = "MAIN_VIDEO_SCREEN";
@@ -53,15 +60,46 @@ public class MainVideoActivity extends AppCompatActivity implements SurfaceHolde
     }
 
     private void initializeVideo() {
-        videoViewHolder= videoView.getHolder();
-        videoViewHolder.addCallback(this);
+        videoView.setSurfaceTextureListener(this);
+    }
+
+
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+        mediaPlayer.start();
+        mediaPlayer.setLooping(true);
+        videoView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+             toggleVideo();
+            }
+        },5000);
+
+    }
+
+    private void toggleVideo() {
+
+    }
+
+
+    private void releaseVideo(){
+        if(videoPlayer!=null){
+            videoPlayer.release();
+            videoPlayer=null;
+        }
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder surfaceHolder) {
+    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
+        Surface videoSurface=new Surface(surfaceTexture);
+        videoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+            }
+        });
         videoPlayer = new MediaPlayer();
-        videoPlayer.setDisplay(videoViewHolder);
+        videoPlayer.setSurface(videoSurface);
         try {
             videoPlayer.setDataSource(VIDEO_URL);
             videoPlayer.prepare();
@@ -73,26 +111,18 @@ public class MainVideoActivity extends AppCompatActivity implements SurfaceHolde
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-        //NOOP
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
+
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        //NOOP
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+        return false;
     }
 
     @Override
-    public void onPrepared(MediaPlayer mediaPlayer) {
-        mediaPlayer.start();
-        mediaPlayer.setLooping(true);
-    }
+    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
 
-    private void releaseVideo(){
-        if(videoPlayer!=null){
-            videoPlayer.release();
-            videoPlayer=null;
-        }
     }
 }
 
