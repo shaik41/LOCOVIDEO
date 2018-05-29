@@ -54,7 +54,7 @@ protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 
 @Override
 protected void dispatchDraw(Canvas canvas) {
-    int save=0;
+    int save;
     if(setToCircle) {
         save = canvas.save();
         canvas.clipPath(path);

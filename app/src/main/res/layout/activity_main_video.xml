@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/cv_view_parent"
+    android:background="@color/contentBackground"
     android:layout_height="match_parent">
 
 
@@ -15,7 +16,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@color/colorAccent"
+        android:background="@drawable/bg_rounded_rectangle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,24 +25,10 @@
 
     </RelativeLayout>
 
-    <!--<TextureView-->
-        <!--android:id="@+id/tv_main_video_content"-->
-        <!--android:layout_width="100dp"-->
-        <!--android:layout_height="100dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/rv_question_card"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="@+id/rv_question_card"-->
-        <!--/>-->
-
     <com.task.locovideotask.ui.videoutils.RoundedCornerLayout
         android:id="@+id/ff_main_video_content"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         app:layout_constraintBottom_toTopOf="@+id/rv_question_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,8 +38,7 @@
             android:id="@+id/tv_main_video_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
+            android:src="@mipmap/ic_launcher_round"
             />
     </com.task.locovideotask.ui.videoutils.RoundedCornerLayout>
 
