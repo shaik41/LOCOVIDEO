@@ -28,14 +28,28 @@
         android:id="@+id/tv_main_video_content"
         android:layout_width="100dp"
         android:layout_height="100dp"
-
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         app:layout_constraintBottom_toTopOf="@+id/rv_question_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rv_question_card"
-        app:srcCompat="@mipmap/ic_launcher" />
+        />
+
+    <LinearLayout
+        android:id="@+id/custom_view"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/rounded_view"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintBottom_toTopOf="@+id/rv_question_card"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rv_question_card"
+        />
+
 
 
 </android.support.constraint.ConstraintLayout>
