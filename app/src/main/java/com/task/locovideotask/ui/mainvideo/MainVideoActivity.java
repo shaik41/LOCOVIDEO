@@ -10,8 +10,10 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.transition.TransitionManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -24,12 +26,13 @@ import com.task.locovideotask.ui.videoutils.VideoUtils;
 
 
 import java.io.IOException;
+import java.util.Random;
 
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener, TextureView.SurfaceTextureListener {
+public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener, TextureView.SurfaceTextureListener, MediaPlayer.OnErrorListener {
 
     @BindView(R.id.tv_main_video_content)
     TextureView videoView;
@@ -44,7 +47,9 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
 
     private boolean isFullScreen = false;
 
-    private String VIDEO_URL = "http://www.exit109.com/~dnn/clips/RW20seconds_2.mp4";
+    private String VIDEO_URL = "https://files.fm/thumb_video/vjzw6gph.mp4";
+    //private String VIDEO_URL = "https://r3---sn-a5mlrn7y.googlevideo.com/videoplayback?itag=18&pl=21&mime=video%2Fmp4&c=WEB&gir=yes&ratebypass=yes&requiressl=yes&ei=rI0NW9q4DJacz7sP67utwAM&lmt=1517078405376929&ip=115.99.112.227&key=cms1&expire=1527636492&dur=702.357&clen=25091730&id=o-AAFWrv3zLS9LE2aYhGaXvsLc5D9vCx9HdbFdJ-eCFk14&source=youtube&fvip=3&sparams=clen,dur,ei,expire,gir,id,initcwndbps,ip,ipbits,itag,lmt,mime,mm,mn,ms,mv,pl,ratebypass,requiressl,source&ipbits=0&signature=4EF9F8250680588CF98CECC67F320DCBCE2EF0FB.258B5392E47837885369BF7A01AA99052E1D05DE&cm2rm=sn-i5uif5t-cagl7s,sn-h55ez7s&req_id=4eda5be50dd0a3ee&redirect_counter=2&cms_redirect=yes&mm=34&mn=sn-a5mlrn7y&ms=ltu&mt=1527614929&mv=m";
+
     private String LOG_TAG = "MAIN_VIDEO_SCREEN";
 
     private DisplayMetrics displayMetrics;
@@ -82,7 +87,7 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
     }
 
     private void initializeVideo() {
-        videoView.setSurfaceTextureListener(this);
+        videoView.setSurfaceTextureListener(MainVideoActivity.this);
     }
 
 
@@ -138,6 +143,7 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
             videoPlayer.prepare();
             videoPlayer.setOnPreparedListener(this);
             videoPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            videoPlayer.setOnErrorListener(this);
         } catch (IOException exception) {
             Log.d(LOG_TAG, getString(R.string.error_video_player) + exception.getMessage());
         }
@@ -165,6 +171,7 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(viewParent);
         constraintSet.constrainHeight(R.id.ff_main_video_content, VideoUtils.getPixelsFromDPI(80, displayMetrics));
+        constraintSet.constrainHeight(R.id.rv_question_card, VideoUtils.getPixelsFromDPI(randomNumberInRange(300,500), displayMetrics));
         constraintSet.constrainWidth(R.id.ff_main_video_content, VideoUtils.getPixelsFromDPI(80, displayMetrics));
         constraintSet.connect(R.id.ff_main_video_content, ConstraintSet.END, R.id.cv_view_parent, ConstraintSet.END, 0);
         constraintSet.connect(R.id.ff_main_video_content, ConstraintSet.START, R.id.cv_view_parent, ConstraintSet.START, 0);
@@ -172,6 +179,9 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
         constraintSet.connect(R.id.ff_main_video_content, ConstraintSet.TOP, R.id.rv_question_card, ConstraintSet.TOP, 0);
 
         performCircularReveal();
+
+
+
 
         constraintSet.applyTo(viewParent);
     }
@@ -205,16 +215,20 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
             int mVideoWidth = videoPlayer.getVideoWidth();
             int mVideoHeight = videoPlayer.getVideoHeight();
 
-            if (mVideoWidth > viewWidth && mVideoHeight > viewHeight) {
-                scaleX = mVideoWidth / viewWidth;
-                scaleY = mVideoHeight / viewHeight;
-            } else if (mVideoWidth < viewWidth && mVideoHeight < viewHeight) {
-                scaleY = viewWidth / mVideoWidth;
-                scaleX = viewHeight / mVideoHeight;
-            } else if (viewWidth > mVideoWidth) {
-                scaleY = (viewWidth / mVideoWidth) / (viewHeight / mVideoHeight);
-            } else if (viewHeight > mVideoHeight) {
-                scaleX = (viewHeight / mVideoHeight) / (viewWidth / mVideoWidth);
+            try {
+                if (mVideoWidth > viewWidth && mVideoHeight > viewHeight) {
+                    scaleX = (float) mVideoWidth / viewWidth;
+                    scaleY = (float) mVideoHeight / viewHeight;
+                } else if (mVideoWidth < viewWidth && mVideoHeight < viewHeight) {
+                    scaleY = (float) viewWidth / mVideoWidth;
+                    scaleX = (float) viewHeight / mVideoHeight;
+                } else if (viewWidth > mVideoWidth) {
+                    scaleY = (viewWidth / mVideoWidth) / (viewHeight / mVideoHeight);
+                } else if (viewHeight > mVideoHeight) {
+                    scaleX = (viewHeight / mVideoHeight) / (viewWidth / mVideoWidth);
+                }
+            }catch(ArithmeticException ar){
+                Log.d(LOG_TAG,ar.getMessage());
             }
 
             //  crop from center, if we have our character on top we have to re-frame accordingly.
@@ -248,12 +262,23 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
 
             viewParent.setVisibility(View.VISIBLE);
             circularReveal.start();
-        } else {
+        } else if(Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+            TransitionManager.beginDelayedTransition(viewParent);
+        } else{
             //TODO
         }
     }
 
 
+    @Override
+    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+        return false;
+    }
+
+    public static int randomNumberInRange(int min, int max) {
+        Random random = new Random();
+        return random.nextInt((max - min) + 1) + min;
+    }
 }
 
 

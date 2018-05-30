@@ -29,6 +29,7 @@
         android:id="@+id/ff_main_video_content"
         android:layout_width="60dp"
         android:layout_height="60dp"
+
         app:layout_constraintBottom_toTopOf="@+id/rv_question_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
