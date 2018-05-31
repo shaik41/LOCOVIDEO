@@ -17,6 +17,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewAnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.task.locovideotask.R;
 import com.task.locovideotask.ui.videoutils.RoundedCornerLayout;
@@ -103,6 +104,8 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
             videoPlayer.setOnErrorListener(this);
         } catch (IOException exception) {
             Log.d(LOG_TAG, getString(R.string.error_video_player) + exception.getMessage());
+            Toast.makeText(MainVideoActivity.this,"Failed to start media player. Please check your connection and try again.",Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -138,9 +141,11 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
         switch (what){
             case MediaPlayer.MEDIA_ERROR_UNKNOWN:
                 Log.d(LOG_TAG,"Unsupported codec or size for the device.");
+                Toast.makeText(MainVideoActivity.this,"Unsupported codec or size for the device.",Toast.LENGTH_SHORT).show();
                 break;
             case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
                 Log.d(LOG_TAG,"The stream url is unavailable or not reachable.");
+                Toast.makeText(MainVideoActivity.this,"The stream url is unavailable or not reachable.",Toast.LENGTH_SHORT).show();
                 break;
         }
         return false;
@@ -270,7 +275,7 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
         } else {
             circularReveal = io.codetail.animation.ViewAnimationUtils.createCircularReveal(videoParent, cx, cy, 0, finalRadius);
         }
-        circularReveal.setDuration(500);
+        circularReveal.setDuration(800);
         circularReveal.start();
     }
 
