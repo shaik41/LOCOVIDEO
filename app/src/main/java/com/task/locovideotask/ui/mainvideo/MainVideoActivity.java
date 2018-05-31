@@ -272,8 +272,11 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
         //Use default circular reveal if 20+ else use the custom from codetail.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             circularReveal = ViewAnimationUtils.createCircularReveal(videoParent, cx, cy, 0, finalRadius);
-        } else {
+        } else if(Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT){
             circularReveal = io.codetail.animation.ViewAnimationUtils.createCircularReveal(videoParent, cx, cy, 0, finalRadius);
+        } else{
+            //Cannot turn on hardware acceleration on Jellybean.
+            return;
         }
         circularReveal.setDuration(800);
         circularReveal.start();
