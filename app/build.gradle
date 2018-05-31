@@ -27,11 +27,14 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 
-    //Dependency Injection
+    //View Injection
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
-    implementation 'com.github.HaarigerHarald:android-youtubeExtractor:master-SNAPSHOT'
+    //Circular reveal for pre-lollipop
+    implementation ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
+        transitive = true;
+    }
 
 
 }

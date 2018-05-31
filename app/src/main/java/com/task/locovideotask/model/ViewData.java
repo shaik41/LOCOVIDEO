@@ -1,4 +1,4 @@
-package com.task.locovideotask.ui.cardvideo;
+package com.task.locovideotask.model;
 
 public class ViewData {
 
