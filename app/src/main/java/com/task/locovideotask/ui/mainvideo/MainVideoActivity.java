@@ -6,6 +6,7 @@ import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +15,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
-import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.widget.FrameLayout;
 
@@ -50,14 +50,13 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
 
     private DisplayMetrics displayMetrics;
 
-    private int lastPausedPosition=0;
+    private Handler toggleHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_video);
         ButterKnife.bind(this);
-
         getDisplayMatrix();
     }
 
@@ -113,6 +112,7 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+        releaseVideo();
         return false;
     }
 
@@ -126,12 +126,10 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
     public void onPrepared(MediaPlayer mediaPlayer) {
         mediaPlayer.start();
         mediaPlayer.setLooping(true);
-        videoView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                toggleVideo();
-            }
-        }, 5000);
+        if(toggleHandler ==null){
+            toggleHandler =new Handler();
+            toggleHandler.postDelayed(toggleRunnable,5000);
+        }
     }
 
 
@@ -162,15 +160,19 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
 
         isFullScreen = !isFullScreen;
 
-        videoView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                toggleVideo();
-            }
-        }, 5000);
-
+        if(toggleHandler !=null) {
+            toggleHandler.postDelayed(toggleRunnable, 5000);
+        }
 
     }
+
+    private Runnable toggleRunnable=new Runnable() {
+        @Override
+        public void run() {
+            toggleVideo();
+        }
+    };
+
     private void setCircleConstraint() {
         //Set the frame layout to clip the edges and draw the circle canvas.
         roundedView.setToCircle(true);
@@ -278,6 +280,10 @@ public class MainVideoActivity extends AppCompatActivity implements MediaPlayer.
             videoPlayer = null;
         }
 
+        if(toggleHandler !=null){
+            toggleHandler.removeCallbacks(toggleRunnable);
+            toggleHandler =null;
+        }
 
     }
 
